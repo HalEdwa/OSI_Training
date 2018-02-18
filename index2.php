@@ -108,7 +108,7 @@
 					   	<p>First fill in your contact information under the "Contacts" tab.</p> 
 					   	<p>Then click on each sections tab to learn from the power point and take the quiz. </p>
 					   	<p>The section tab will turn green when a section is complete. </p>
-					   	<p> When all sections are green you will have completed teh induction. </p>
+					   	<p> When all sections are green you will have completed the induction. </p>
 					   ';
 			}
 			function ppandg(){
@@ -511,19 +511,20 @@
 				}	
 			}
 			function completeSubmit() {
-				IF (isset($_POST["Quiz1"])==FALSE || isset($_POST["Quiz2"])==FALSE || isset($_POST["Quiz3"])==FALSE || isset($_POST["Quiz4"])==FALSE) {
+				IF (isset($_SESSION["Quiz1"])==FALSE || isset($_SESSION["Quiz2"])==FALSE || isset($_SESSION["Quiz3"])==FALSE || isset($_SESSION["Quiz4"])==FALSE) {
 
-				} else if ($_POST["Quiz1"] == "yes" & $_POST["Quiz2"] == "yes" & $_POST["Quiz3"] == "yes" & $_POST["Quiz4"] == "yes" ) {
+				} else if ($_SESSION["Quiz1"] == "yes" & $_SESSION["Quiz2"] == "yes" & $_SESSION["Quiz3"] == "yes" & $_SESSION["Quiz4"] == "yes" ) {
 					$date = date_create();
 					$time = date_timestamp_get($date);
 					$handle = fopen("./inducted.txt", "a");
 					$dataEntry = "\r\n{$_SESSION["firstname"]},{$_SESSION["lastname"]},{$_SESSION["email"]},{$_SESSION["company"]},{$time}";
 					fwrite($handle, $dataEntry);
 					echo '
-					<p> Congratulations you have completed all the modules and have been logged in the system. <br><p>
+					<h1> Congratulations you have completed all the modules and this has been logged in the system. <br><h1>
 					';
 				}
 			}
+
 	   		session_start();
 			if (isset($_SESSION["sessionInit"]) != true) {
 				echo '<form method="post" id="passwordForm">';
@@ -531,12 +532,14 @@
 				echo '<div class="password">';
         		echo '<label for="name">Password: </label>';
         		echo '<input type="text" id="password" name="password">';
+        		echo'<input type="submit" value="Submit" >';
     			echo '</div>';
     			echo'</form>';
     			if (isset($_POST['password'])){
     				$password = $_POST['password'];
     					if ($password = "osiTester") {
     						$_SESSION["sessionInit"] = "On";
+    						header( "refresh:0.1;" );
     					} else {
     						$_SESSION["sessionInit"] = "Off";
 							echo '
@@ -575,7 +578,6 @@
 						echo'<input type="submit" class="uncompleted" name="whs" value="WHS" onclick="whs()" />';
 					}
 					echo'</form>';
-
 					if($_GET || $_POST){
 					    if(isset($_GET['contacts'])){
 					        contacts();
@@ -599,14 +601,19 @@
 					        whsQuiz();
 					    }elseif(isset($_POST['pp&gQuizMark'])){
 					        ppandgQuizMark();
+					        completeSubmit();
 					    }elseif(isset($_POST['gmpQuizMark'])){
 					        gmpQuizMark();
+					        completeSubmit();
 					    }elseif(isset($_POST['haccpQuizMark'])){
 					        haccpQuizMark();
+					        completeSubmit();
 					    }elseif(isset($_POST['whsQuizMark'])){
 					        whsQuizMark();
+					        completeSubmit();
 						}elseif(isset($_POST['contactsSubmit'])){
 						    contactsSubmit();
+						    completeSubmit();
 						    }
 					}else {
 					    initial();
